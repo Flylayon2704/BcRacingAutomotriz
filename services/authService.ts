@@ -19,7 +19,11 @@ export class AuthService {
             const data = await response.json();
             return data;
         } catch (error) {
-            console.error('Error during login:', error);
+            if (error instanceof Error) {
+                console.error('Error during login:', error.message);
+            } else {
+                console.error('Error during login:', error);
+            }
             throw error;
         }
     }
