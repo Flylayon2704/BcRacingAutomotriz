@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { AuthService } from '@/services/authService';
+import { Link } from 'expo-router';
+import { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-  StatusBar,
   Alert,
   Animated,
   Dimensions,
-  ImageBackground, // Importar ImageBackground
+  ImageBackground,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { Link } from 'expo-router';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -20,6 +21,7 @@ const App = () => {
   const [currentScreen, setCurrentScreen] = useState('splash');
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
+  const authService = new AuthService();
   
   // Animaciones del splash
   const carPosition = new Animated.Value(-100);
@@ -98,10 +100,20 @@ const App = () => {
       Alert.alert('Error', 'Por favor complete todos los campos');
       return;
     }
-    
-    // Aquí puedes agregar la lógica de autenticación
-    // Por ahora, solo navegamos al menú principal
-    setCurrentScreen('menu');
+
+    authService.login(usuario, contrasena)
+      .then(response => {
+        if (response.success) {
+          Alert.alert('Éxito', 'Inicio de sesión exitoso');
+          setCurrentScreen('menu');
+        } else {
+          Alert.alert('Error', response.message || 'Credenciales incorrectas');
+        }
+      })
+      .catch(error => {
+        console.error('Error en el inicio de sesión:', error);
+        Alert.alert('Error', 'Ocurrió un error al iniciar sesión');
+      }); 
   };
 
   const handleForgotPassword = () => {
