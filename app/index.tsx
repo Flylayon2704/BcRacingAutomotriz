@@ -11,7 +11,8 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
+  Image
 } from 'react-native';
 import { styles } from './styles';
 
@@ -188,7 +189,6 @@ const App = () => {
         <SafeAreaView style={styles.loginContainerWithBackground}>
           <StatusBar backgroundColor="#6B73FF" barStyle="light-content" />
           
-          {/* Overlay para oscurecer la imagen si es necesario */}
           <View style={styles.overlay} />
           
           {/* Header */}
@@ -238,22 +238,22 @@ const App = () => {
       {/* Header */}
       <View style={styles.menuHeader}>
         <View style={styles.menuButton}>
-          <Text style={styles.menuButtonText}>☰</Text>
+          <Text style={styles.menuButtonText}>
+            <Image source={require('../assets/images/icon.jpg')} style={{borderRadius:12}}></Image>
+          </Text>
         </View>
         <Text style={styles.headerTitle}>BC.RACING</Text>
-        <View style={styles.profileButton}>
-          <Text style={styles.profileButtonText}>👤</Text>
-        </View>
+          <Text style={styles.menuButtonText}></Text>
+        
       </View>
 
       {/* Menu Options */}
       <View style={styles.menuContainer}>
-        <View style={styles.menuRow}>
           <Link href="/productos" asChild>
             <TouchableOpacity 
             style={styles.menuOption}
           >
-            <Text style={styles.menuOptionText}>Productos</Text>
+            <Text style={styles.menuOptionText}>Productos🚓</Text>
           </TouchableOpacity>
           </Link>
 
@@ -261,16 +261,15 @@ const App = () => {
             <TouchableOpacity 
             style={styles.menuOption}
           >
-            <Text style={styles.menuOptionText}>Estadísticas</Text>
+            <Text style={styles.menuOptionText}>Estadísticas📊</Text>
           </TouchableOpacity>
           </Link>
-        </View>
 
         <Link href="/proveedor" asChild>
           <TouchableOpacity 
             style={styles.menuOptionWide}
           >
-            <Text style={styles.menuOptionText}>Gestión de{'\n'}Proveedores</Text>
+            <Text style={styles.menuOptionText}>Gestión de{'\n'}Proveedores👨‍💼</Text>
           </TouchableOpacity>
         </Link>
 
@@ -278,7 +277,7 @@ const App = () => {
         <TouchableOpacity 
           style={styles.menuOptionWide}
         >
-          <Text style={styles.menuOptionText}>Gestión de{'\n'}productos</Text>
+          <Text style={styles.menuOptionText}>Gestión de{'\n'}productos🕵️‍♂️</Text>
         </TouchableOpacity>
         </Link>
 
@@ -286,7 +285,7 @@ const App = () => {
           <TouchableOpacity 
           style={styles.menuOptionWide}
         >
-          <Text style={styles.menuOptionText}>Factura</Text>
+          <Text style={styles.menuOptionText}>Factura📃</Text>
         </TouchableOpacity>
         </Link>
       </View>
@@ -317,8 +316,5 @@ const App = () => {
     </SafeAreaView>
   );
 };
-
-
- 
 
 export default App;

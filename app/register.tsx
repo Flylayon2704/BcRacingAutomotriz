@@ -69,9 +69,6 @@ const register = () => {
                         <Text style={styles.loginButtonText}>Ingresar</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={handleForgotPassword}>
-                        <Text style={styles.forgotPasswordTextWithBackground}>¿olvidó su contraseña?</Text>
-                    </TouchableOpacity>
                 </View>
             </SafeAreaView>
         </ImageBackground>

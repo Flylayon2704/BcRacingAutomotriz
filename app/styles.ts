@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#dfdede',
   },
 
   // Splash Screen Styles
@@ -189,7 +189,10 @@ export const styles = StyleSheet.create({
   },
   menuButtonText: {
     color: 'white',
+    width: 30,
+    height: 30,
     fontSize: 20,
+    
   },
   profileButton: {
     width: 30,
@@ -204,18 +207,14 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 30,
   },
-  menuRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
   menuOption: {
     backgroundColor: '#87CEEB',
     borderRadius: 20,
-    width: '47%',
-    height: 100,
+    width: '100%',
+    height: 80,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 15,
   },
   menuOptionWide: {
     backgroundColor: '#87CEEB',

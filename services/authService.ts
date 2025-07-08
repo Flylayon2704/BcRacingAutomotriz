@@ -1,5 +1,5 @@
 export class AuthService {
-    private URL: string = 'http://10.0.2.2/api/auth';
+    private URL: string = 'http://10.0.2.2:3000/api/auth';
     async login(email: string, password: string): Promise<any> {
             const response = await fetch(`${this.URL}/login`, {
                 method: 'POST',
