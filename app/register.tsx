@@ -1,6 +1,7 @@
 import { AuthService } from '@/services/authService';
 import { useState } from 'react';
 import {
+    Alert,
     ImageBackground,
     SafeAreaView,
     StatusBar,
@@ -20,8 +21,13 @@ const register = () => {
     const handleRegister = async () => {
         try {
             const response = await authService.register(usuario, contrasena);
-            console.log('Registro exitoso:', response);
-            // Aquí puedes redirigir al usuario a otra pantalla o mostrar un mensaje de éxito
+            console.log('Registro:', response);
+            if (response.user) {
+                Alert.alert('Registro exitoso', 'Bienvenido a BC.RACING');
+                // Aquí puedes redirigir al usuario a la pantalla de inicio o login
+            }else{
+                Alert.alert('Error', 'No se pudo completar el registro. Inténtalo de nuevo.');
+            }
         } catch (error) {
             console.error('Error en el registro:', error);
             // Aquí puedes mostrar un mensaje de error al usuario
