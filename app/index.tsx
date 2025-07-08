@@ -95,13 +95,13 @@ const App = () => {
     }, 4000);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (usuario.trim() === '' || contrasena.trim() === '') {
       Alert.alert('Error', 'Por favor complete todos los campos');
       return;
     }
 
-    authService.login(usuario, contrasena)
+    await authService.login(usuario, contrasena)
       .then(response => {
         if (response.success) {
           Alert.alert('Éxito', 'Inicio de sesión exitoso');
