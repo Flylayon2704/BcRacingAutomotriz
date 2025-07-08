@@ -114,7 +114,7 @@ const App = () => {
       }
    } catch (error) {
       console.error('Error en handleLogin:', error);
-      Alert.alert('Error', 'Usuario o contraseña incorrectos', error);
+      Alert.alert('Error',`${error}`);
       return;
     }
    }
