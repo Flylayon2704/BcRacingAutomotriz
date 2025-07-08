@@ -101,19 +101,22 @@ const App = () => {
       return;
     }
 
-    await authService.login(usuario, contrasena)
-      .then(response => {
-        if (response.success) {
-          Alert.alert('Éxito', 'Inicio de sesión exitoso');
-          setCurrentScreen('menu');
-        } else {
-          Alert.alert('Error', response.message || 'Credenciales incorrectas');
-        }
-      })
-      .catch(error => {
-        console.error('Error en el inicio de sesión:', error);
-        Alert.alert('Error', 'Ocurrió un error al iniciar sesión');
-      }); 
+   try {
+      const response = await authService.login(usuario, contrasena);
+      console.log('Respuesta del login:', response);
+      if (response && response.success) {
+        setCurrentScreen('menu');
+        setUsuario('');
+        setContrasena('');
+      } else {
+        Alert.alert('Error', 'Usuario o contraseña incorrectos');
+      }
+   } catch (error) {
+      console.error('Error en handleLogin:', error);
+      Alert.alert('Error', 'Usuario o contraseña incorrectos');
+      return;
+    }
+   }
   };
 
   const handleForgotPassword = () => {
