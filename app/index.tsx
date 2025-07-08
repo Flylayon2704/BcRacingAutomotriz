@@ -18,6 +18,7 @@ import {
 const { width: screenWidth } = Dimensions.get('window');
 
 const App = () => {
+
   const [currentScreen, setCurrentScreen] = useState('splash');
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
@@ -117,9 +118,7 @@ const App = () => {
       return;
     }
    }
-  };
-
-  const handleForgotPassword = () => {
+    const handleForgotPassword = () => {
     Alert.alert('Recuperar Contraseña', 'Funcionalidad en desarrollo');
   };
 
@@ -567,5 +566,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+
+ 
 
 export default App;
