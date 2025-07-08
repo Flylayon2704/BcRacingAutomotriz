@@ -104,7 +104,7 @@ const App = () => {
 
    try {
       const response = await authService.login(usuario, contrasena);
-      console.log('Respuesta del login:', response);
+      console.log('Respuesta   login:', response);
       if (response && response.token) {
         setCurrentScreen('menu');
         setUsuario('');
@@ -114,7 +114,7 @@ const App = () => {
       }
    } catch (error) {
       console.error('Error en handleLogin:', error);
-      Alert.alert('Error', 'Usuario o contraseña incorrectos');
+      Alert.alert('Error', 'Usuario o contraseña incorrectos', error);
       return;
     }
    }
