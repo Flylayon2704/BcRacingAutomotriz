@@ -1,7 +1,6 @@
 export class AuthService {
     private URL: string = 'http://10.0.2.2/api/auth';
     async login(email: string, password: string): Promise<any> {
-        try {
             const response = await fetch(`${this.URL}/login`, {
                 method: 'POST',
                 headers: {
@@ -15,13 +14,9 @@ export class AuthService {
                 const errorMessage = errorData.message || 'Login failed';
                 throw new Error(errorMessage);
             }
-
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('Error during login:', error);
-            throw error;
-        }
+            
+            return response.json();
+        
     }
     async register(email: string, password: string): Promise<any> {
         try {
