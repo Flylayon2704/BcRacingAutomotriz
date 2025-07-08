@@ -1,8 +1,7 @@
 import { Link } from 'expo-router';
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
-import { CartesianChart, Bar, Line, Area } from 'victory-native';
-import { PolarChart, Pie } from 'victory-native';
+import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Area, Bar, CartesianChart, Line, Pie, PolarChart } from 'victory-native';
 
 const { width } = Dimensions.get('window');
 const chartWidth = width - 40;
