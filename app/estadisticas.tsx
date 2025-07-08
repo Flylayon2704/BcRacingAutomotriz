@@ -58,7 +58,7 @@ const movimientosData = [
 export const estadisticas: React.FC = () => {
   return (
     <ScrollView style={styles.container}>
-        <Link href={"/"} asChild>
+        <Link href="/" asChild>
                     <TouchableOpacity
 
                   >

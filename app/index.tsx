@@ -10,6 +10,7 @@ import {
   Alert,
   Animated,
   Dimensions,
+  ImageBackground, // Importar ImageBackground
 } from 'react-native';
 import { Link } from 'expo-router';
 
@@ -165,44 +166,53 @@ const App = () => {
 
   if (currentScreen === 'login') {
     return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar backgroundColor="#6B73FF" barStyle="light-content" />
-        
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>BC.RACING</Text>
-        </View>
+      <ImageBackground
+        source={require('../assets/images/login.jpg')} // Ruta a tu imagen
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
+        <SafeAreaView style={styles.loginContainerWithBackground}>
+          <StatusBar backgroundColor="#6B73FF" barStyle="light-content" />
+          
+          {/* Overlay para oscurecer la imagen si es necesario */}
+          <View style={styles.overlay} />
+          
+          {/* Header */}
+          <View style={styles.headerWithBackground}>
+            <Text style={styles.headerTitle}>BC.RACING</Text>
+          </View>
 
-        {/* Login Form */}
-        <View style={styles.loginContainer}>
-          <Text style={styles.inputLabel}>USUARIO</Text>
-          <TextInput
-            style={styles.input}
-            value={usuario}
-            onChangeText={setUsuario}
-            placeholder="Ingrese su usuario"
-            placeholderTextColor="#999"
-          />
+          {/* Login Form */}
+          <View style={styles.loginFormContainer}>
+            <Text style={styles.inputLabelWithBackground}>USUARIO</Text>
+            <TextInput
+              style={styles.inputWithBackground}
+              value={usuario}
+              onChangeText={setUsuario}
+              placeholder="Ingrese su usuario"
+              placeholderTextColor="#999"
+            />
 
-          <Text style={styles.inputLabel}>CONTRASEÑA</Text>
-          <TextInput
-            style={styles.input}
-            value={contrasena}
-            onChangeText={setContrasena}
-            placeholder="Ingrese su contraseña"
-            placeholderTextColor="#999"
-            secureTextEntry
-          />
+            <Text style={styles.inputLabelWithBackground}>CONTRASEÑA</Text>
+            <TextInput
+              style={styles.inputWithBackground}
+              value={contrasena}
+              onChangeText={setContrasena}
+              placeholder="Ingrese su contraseña"
+              placeholderTextColor="#999"
+              secureTextEntry
+            />
 
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginButtonText}>Ingresar</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+              <Text style={styles.loginButtonText}>Ingresar</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleForgotPassword}>
-            <Text style={styles.forgotPasswordText}>¿olvidó su contraseña?</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+            <TouchableOpacity onPress={handleForgotPassword}>
+              <Text style={styles.forgotPasswordTextWithBackground}>¿olvidó su contraseña?</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </ImageBackground>
     );
   }
 
@@ -348,7 +358,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   
-  // Login Styles
+  // Login Styles (originales)
   header: {
     backgroundColor: '#6B73FF',
     paddingTop: 60,
@@ -401,6 +411,70 @@ const styles = StyleSheet.create({
     color: '#666',
     fontSize: 14,
     textDecorationLine: 'underline',
+  },
+
+  // Nuevos estilos para el login con fondo
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  loginContainerWithBackground: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Overlay oscuro para mejorar legibilidad
+  },
+  headerWithBackground: {
+    backgroundColor: 'rgba(107, 115, 255, 0.8)', // Semi-transparente
+    paddingTop: 60,
+    paddingBottom: 40,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    alignItems: 'center',
+  },
+  loginFormContainer: {
+    flex: 1,
+    paddingHorizontal: 30,
+    paddingTop: 80,
+    zIndex: 1, // Asegura que esté sobre el overlay
+  },
+  inputLabelWithBackground: {
+    fontSize: 12,
+    color: '#fff', // Texto blanco para mejor contraste
+    marginBottom: 8,
+    marginTop: 20,
+    fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  inputWithBackground: {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Semi-transparente
+    borderRadius: 25,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    fontSize: 16,
+    color: '#333',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  forgotPasswordTextWithBackground: {
+    textAlign: 'center',
+    marginTop: 20,
+    color: '#fff',
+    fontSize: 14,
+    textDecorationLine: 'underline',
+    fontWeight: '500',
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
 
   // Menu Styles
