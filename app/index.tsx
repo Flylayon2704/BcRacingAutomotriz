@@ -105,7 +105,7 @@ const App = () => {
    try {
       const response = await authService.login(usuario, contrasena);
       console.log('Respuesta del login:', response);
-      if (response && response.success) {
+      if (response && response.token) {
         setCurrentScreen('menu');
         setUsuario('');
         setContrasena('');
