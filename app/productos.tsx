@@ -137,6 +137,7 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
   const fetchProducts = async () => {
       try {
         const data = await productService.getAllProducts();
+        console.log('Productos cargados:', data);
         setProductos(data);
         setFilteredProductos(data);
       } catch (error) {
