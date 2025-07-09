@@ -248,7 +248,7 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
       setProductos(productos.map(p => p._id === editingProduct._id ? newProduct : p));
       productService.updateProduct(editingProduct._id.toString(), newProduct);
     } else {
-      // Crear nuevo producto en el backend
+      console.log('Nuevo producto:', newProduct);
       productService.createProduct(newProduct as any).then((savedProduct) => {
         setProductos([...productos, savedProduct]);
       }).catch((error) => {
