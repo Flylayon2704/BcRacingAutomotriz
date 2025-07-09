@@ -24,12 +24,12 @@ const App = () => {
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
   const authService = new AuthService();
-  
+
   // Animaciones del splash
   const carPosition = new Animated.Value(-100);
   const logoOpacity = new Animated.Value(0);
   const logoScale = new Animated.Value(0.8);
-  
+
   // Animaciones para los dots de carga
   const dot1Opacity = new Animated.Value(0.4);
   const dot2Opacity = new Animated.Value(0.4);
@@ -103,7 +103,7 @@ const App = () => {
       return;
     }
 
-   try {
+    try {
       const response = await authService.login(usuario, contrasena);
       console.log('Respuesta   login:', response);
       if (response && response.token) {
@@ -113,13 +113,13 @@ const App = () => {
       } else {
         Alert.alert('Error', 'Usuario o contraseña incorrectos');
       }
-   } catch (error) {
+    } catch (error) {
       console.error('Error en handleLogin:', error);
-      Alert.alert('Error',`${error}`);
+      Alert.alert('Error', `${error}`);
       return;
     }
-   }
-    const handleForgotPassword = () => {
+  }
+  const handleForgotPassword = () => {
     Alert.alert('Recuperar Contraseña', 'Funcionalidad en desarrollo');
   };
 
@@ -146,7 +146,7 @@ const App = () => {
         <StatusBar backgroundColor="#1a1a2e" barStyle="light-content" />
 
         {/* Carro animado */}
-        <Animated.View 
+        <Animated.View
           style={[
             styles.carContainer,
             {
@@ -158,7 +158,7 @@ const App = () => {
         </Animated.View>
 
         {/* Logo BC.RACING */}
-        <Animated.View 
+        <Animated.View
           style={[
             styles.logoContainer,
             {
@@ -188,9 +188,9 @@ const App = () => {
       >
         <SafeAreaView style={styles.loginContainerWithBackground}>
           <StatusBar backgroundColor="#6B73FF" barStyle="light-content" />
-          
+
           <View style={styles.overlay} />
-          
+
           {/* Header */}
           <View style={styles.headerWithBackground}>
             <Text style={styles.headerTitle}>BC.RACING</Text>
@@ -234,39 +234,39 @@ const App = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#6B73FF" barStyle="light-content" />
-      
+
       {/* Header */}
       <View style={styles.menuHeader}>
         <View style={styles.menuButton}>
           <Text style={styles.menuButtonText}>
-            <Image source={require('../assets/images/icon.jpg')} style={{borderRadius:12}}></Image>
+            <Image source={require('../assets/images/icon.jpg')} style={{ borderRadius: 12 }}></Image>
           </Text>
         </View>
         <Text style={styles.headerTitle}>BC.RACING</Text>
-          <Text style={styles.menuButtonText}></Text>
-        
+        <Text style={styles.menuButtonText}></Text>
+
       </View>
 
       {/* Menu Options */}
       <View style={styles.menuContainer}>
-          <Link href="/productos" asChild>
-            <TouchableOpacity 
+        <Link href="/productos" asChild>
+          <TouchableOpacity
             style={styles.menuOption}
           >
             <Text style={styles.menuOptionText}>Productos🚓</Text>
           </TouchableOpacity>
-          </Link>
+        </Link>
 
-          <Link href="/estadisticas" asChild>
-            <TouchableOpacity 
+        <Link href="/estadisticas" asChild>
+          <TouchableOpacity
             style={styles.menuOption}
           >
             <Text style={styles.menuOptionText}>Estadísticas📊</Text>
           </TouchableOpacity>
-          </Link>
+        </Link>
 
         <Link href="/proveedor" asChild>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.menuOptionWide}
           >
             <Text style={styles.menuOptionText}>Gestión de{'\n'}Proveedores👨‍💼</Text>
@@ -274,39 +274,34 @@ const App = () => {
         </Link>
 
         <Link href="/gestorproduct" asChild>
-        <TouchableOpacity 
-          style={styles.menuOptionWide}
-        >
-          <Text style={styles.menuOptionText}>Gestión de{'\n'}productos🕵️‍♂️</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuOptionWide}
+          >
+            <Text style={styles.menuOptionText}>Gestión de{'\n'}productos🕵️‍♂️</Text>
+          </TouchableOpacity>
         </Link>
 
         <Link href="/factura" asChild>
-          <TouchableOpacity 
-          style={styles.menuOptionWide}
-        >
-          <Text style={styles.menuOptionText}>Factura📃</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.menuOptionWide}
+          >
+            <Text style={styles.menuOptionText}>Factura📃</Text>
+          </TouchableOpacity>
         </Link>
       </View>
 
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity 
-          style={styles.bottomNavButton}
-          onPress={() => handleMenuOption('Reporte')}
-        >
-          <Text style={styles.bottomNavText}>Reporte</Text>
-        </TouchableOpacity>
+        <Link href="/report" asChild>
+          <TouchableOpacity
+            style={styles.bottomNavButton}
+          >
+            <Text style={styles.bottomNavText}>Reporte</Text>
+          </TouchableOpacity>
+        </Link>
 
-        <TouchableOpacity 
-          style={styles.bottomNavButton}
-          onPress={() => handleMenuOption('Historial')}
-        >
-          <Text style={styles.bottomNavText}>Historial</Text>
-        </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.bottomNavButton}
           onPress={handleLogout}
         >
