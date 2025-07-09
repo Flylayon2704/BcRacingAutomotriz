@@ -329,7 +329,11 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.actionBtn, styles.deleteBtn]}
-            onPress={() => deleteProduct(item._id)}
+            onPress={() => {
+              if (item._id !== undefined) {
+                deleteProduct(item._id);
+              }
+            }}
           >
             <Text style={styles.actionBtnText}>🗑️ Eliminar</Text>
           </TouchableOpacity>
@@ -408,7 +412,7 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
       <FlatList
         data={productos}
         renderItem={renderProductItem}
-        keyExtractor={(item) => item._id.toString()}
+        keyExtractor={(item) => (item._id !== undefined && item._id !== null ? item._id.toString() : Math.random().toString())}
         style={styles.productsList}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.productsListContent}
