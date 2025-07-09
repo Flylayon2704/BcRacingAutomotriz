@@ -275,7 +275,7 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
           text: 'Eliminar',
           style: 'destructive',
           onPress: () => {
-            setProductos(productos.filter(p => p.id !== id));
+            setProductos(productos.filter(p => p._id !== id));
             Alert.alert('Éxito', 'Producto eliminado correctamente');
           }
         }
@@ -332,7 +332,7 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.actionBtn, styles.deleteBtn]}
-            onPress={() => deleteProduct(item.id)}
+            onPress={() => deleteProduct(item._id)}
           >
             <Text style={styles.actionBtnText}>🗑️ Eliminar</Text>
           </TouchableOpacity>
@@ -411,7 +411,7 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
       <FlatList
         data={filteredProductos}
         renderItem={renderProductItem}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item._id.toString()}
         style={styles.productsList}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.productsListContent}
