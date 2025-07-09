@@ -247,8 +247,15 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
       // Editar producto existente
       setProductos(productos.map(p => p._id === editingProduct._id ? newProduct : p));
     } else {
-      // Agregar nuevo producto
-      setProductos([...productos, newProduct]);
+      if (newProduct._id !== undefined && newProduct._id !== null) {
+        productService.updateProduct(newProduct._id.toString(), newProduct);
+      }
+      productService.getAllProducts().then(() => {
+        setProductos([...productos, newProduct]);
+      }).catch((error) => {
+        console.error('Error al agregar producto:', error);
+        Alert.alert('Error', 'No se pudo agregar el producto');
+      });
     }
 
     closeModal();

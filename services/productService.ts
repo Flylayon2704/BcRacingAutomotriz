@@ -63,6 +63,29 @@ export class ProductService {
         }
     }
 
+    async updateProduct(id: string, productData: Producto): Promise<Producto> {
+        try {
+            const response = await fetch(`${this.URL}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(productData),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                const errorMessage = errorData.message || 'Error updating product';
+                throw new Error(errorMessage);
+            }
+
+            return response.json();
+        } catch (error) {
+            console.error('Error in updateProduct:', error);
+            throw error;
+        }
+    }
+
 
 
     
