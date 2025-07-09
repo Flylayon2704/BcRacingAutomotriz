@@ -1,50 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-  Modal,
-  Alert,
-  SafeAreaView,
-  StatusBar,
-  FlatList,
-  Dimensions,
-} from 'react-native';
+import { FormData } from '@/dto/storeProduct';
+import { Producto } from '@/interfaces/product';
+import { ProductService } from '@/services/productService';
 import { Link } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import {
+  Alert,
+  Dimensions,
+  FlatList,
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native';
+import { styles } from './stylesProduct';
 
 const { width } = Dimensions.get('window');
 
-// Interfaces
-interface Producto {
-  id: number;
-  codigo: string;
-  nombre: string;
-  descripcion: string;
-  categoria_id: number;
-  categoria_nombre: string;
-  marca: string;
-  precio_compra: number;
-  precio_venta: number;
-  stock_minimo: number;
-  stock_actual: number;
-  ubicacion: string;
-}
-
-interface FormData {
-  codigo: string;
-  nombre: string;
-  descripcion: string;
-  categoria_id: string;
-  marca: string;
-  precio_compra: string;
-  precio_venta: string;
-  stock_minimo: string;
-  stock_actual: string;
-  ubicacion: string;
-}
 
 interface StockStatus {
   color: string;
@@ -140,8 +115,9 @@ const CATEGORIAS: Record<number, string> = {
 };
 
 const productos: React.FC<ProductosProps> = ({ navigation }) => {
-  const [productos, setProductos] = useState<Producto[]>(PRODUCTOS_DATA);
-  const [filteredProductos, setFilteredProductos] = useState<Producto[]>(PRODUCTOS_DATA);
+  const productService = new ProductService();
+  const [productos, setProductos] = useState<Producto[]>([]);
+  const [filteredProductos, setFilteredProductos] = useState<Producto[]>([]);
   const [searchText, setSearchText] = useState<string>('');
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [editingProduct, setEditingProduct] = useState<Producto | null>(null);
@@ -158,9 +134,39 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
     ubicacion: ''
   });
 
+  const fetchProducts = async () => {
+      try {
+        const data = await productService.getAllProducts();
+        setProductos(data);
+        setFilteredProductos(data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        Alert.alert('Error', 'No se pudieron cargar los productos');
+      }
+    };
+
+  const fetchProductsByName = async (name: string) => {
+    try {
+      const data = await productService.getProductsByName(name);
+      setProductos(data);
+      setFilteredProductos(data);
+    } catch (error) {
+      console.error('Error fetching products by name:', error);
+      Alert.alert('Error', 'No se pudieron cargar los productos');
+    }
+  }
+
   useEffect(() => {
-    filterProducts();
-  }, [searchText, productos]);
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+        fetchProductsByName(searchText);
+    }
+    , 300); 
+    return () => clearTimeout(timer);
+  }, [searchText]);
 
   const filterProducts = (): void => {
     if (searchText.trim() === '') {
@@ -505,278 +511,6 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
-    backgroundColor: '#667eea',
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-  },
-  headerContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  backButton: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  backButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  headerTitle: {
-    color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold',
-    flex: 1,
-    textAlign: 'center',
-    marginRight: 80,
-  },
-  actionsBar: {
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    alignItems: 'center',
-    backgroundColor: 'white',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  searchContainer: {
-    flex: 1,
-    marginRight: 15,
-  },
-  searchInput: {
-    backgroundColor: '#f8f9fa',
-    borderRadius: 25,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-  addButton: {
-    backgroundColor: '#667eea',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 25,
-  },
-  addButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  productsList: {
-    flex: 1,
-  },
-  productsListContent: {
-    padding: 20,
-  },
-  productCard: {
-    backgroundColor: 'white',
-    borderRadius: 15,
-    padding: 20,
-    marginBottom: 15,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-  },
-  productHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  productCode: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  stockBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 15,
-  },
-  stockText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  productName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 5,
-  },
-  productDescription: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 15,
-    lineHeight: 20,
-  },
-  productDetails: {
-    marginBottom: 15,
-  },
-  detailRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-  },
-  detailLabel: {
-    fontSize: 14,
-    color: '#666',
-    fontWeight: '500',
-  },
-  detailValue: {
-    fontSize: 14,
-    color: '#333',
-    fontWeight: '600',
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  actionBtn: {
-    flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 8,
-    marginHorizontal: 5,
-  },
-  editBtn: {
-    backgroundColor: '#e3f2fd',
-  },
-  deleteBtn: {
-    backgroundColor: '#ffebee',
-  },
-  actionBtnText: {
-    textAlign: 'center',
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    width: width * 0.9,
-    maxHeight: '80%',
-    overflow: 'hidden',
-  },
-  modalHeader: {
-    backgroundColor: '#667eea',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-  },
-  modalTitle: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  closeButton: {
-    color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  modalBody: {
-    padding: 20,
-  },
-  formGroup: {
-    marginBottom: 20,
-  },
-  formLabel: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
-  },
-  formInput: {
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-    fontSize: 16,
-    backgroundColor: '#f8f9fa',
-  },
-  formInputMultiline: {
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-  pickerContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  pickerOption: {
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-  pickerOptionSelected: {
-    backgroundColor: '#667eea',
-    borderColor: '#667eea',
-  },
-  pickerOptionText: {
-    fontSize: 14,
-    color: '#666',
-  },
-  pickerOptionTextSelected: {
-    color: 'white',
-    fontWeight: '600',
-  },
-  modalActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
-  },
-  cancelButton: {
-    flex: 1,
-    paddingVertical: 15,
-    marginRight: 10,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  cancelButtonText: {
-    color: '#666',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  saveButton: {
-    flex: 1,
-    marginLeft: 10,
-    backgroundColor: '#667eea',
-    paddingVertical: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  saveButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
+
 
 export default productos;
