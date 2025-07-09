@@ -117,7 +117,6 @@ const CATEGORIAS: Record<number, string> = {
 const productos: React.FC<ProductosProps> = ({ navigation }) => {
   const productService = new ProductService();
   const [productos, setProductos] = useState<Producto[]>([]);
-  const [filteredProductos, setFilteredProductos] = useState<Producto[]>([]);
   const [searchText, setSearchText] = useState<string>('');
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [editingProduct, setEditingProduct] = useState<Producto | null>(null);
@@ -139,7 +138,6 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
         const data = await productService.getAllProducts();
         console.log('Productos cargados:', data);
         setProductos(data);
-        setFilteredProductos(data);
       } catch (error) {
         console.error('Error fetching products:', error);
         Alert.alert('Error', 'No se pudieron cargar los productos');
@@ -147,13 +145,15 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
     };
 
   const fetchProductsByName = async (name: string) => {
-    try {
-      const data = await productService.getProductsByName(name);
-      setProductos(data);
-      setFilteredProductos(data);
-    } catch (error) {
-      console.error('Error fetching products by name:', error);
-      Alert.alert('Error', 'No se pudieron cargar los productos');
+    try{
+      if (name.trim() === '') {
+        const allProducts = await productService.getAllProducts();
+        console.log('Cargando todos los productos:', allProducts);
+        setProductos(allProducts);
+      } else {
+        const data = await productService.getProductsByName(name);
+        console.log('Productos filtrados por nombre:', data);
+        setProductos(data);}
     }
   }
 
@@ -168,20 +168,6 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
     , 300); 
     return () => clearTimeout(timer);
   }, [searchText]);
-
-  const filterProducts = (): void => {
-    if (searchText.trim() === '') {
-      setFilteredProductos(productos);
-    } else {
-      const filtered = productos.filter(producto =>
-        producto.codigo.toLowerCase().includes(searchText.toLowerCase()) ||
-        producto.nombre.toLowerCase().includes(searchText.toLowerCase()) ||
-        producto.marca.toLowerCase().includes(searchText.toLowerCase()) ||
-        producto.categoria_nombre.toLowerCase().includes(searchText.toLowerCase())
-      );
-      setFilteredProductos(filtered);
-    }
-  };
 
   const getStockStatus = (stockActual: number, stockMinimo: number): StockStatus => {
     if (stockActual <= stockMinimo) {
@@ -409,7 +395,7 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
 
       {/* Products List */}
       <FlatList
-        data={filteredProductos}
+        data={productos}
         renderItem={renderProductItem}
         keyExtractor={(item) => item._id.toString()}
         style={styles.productsList}
