@@ -34,7 +34,7 @@ interface ProductosProps {
 // Datos de productos como JSON
 const PRODUCTOS_DATA: Producto[] = [
   {
-    id: 1,
+    _id: 1,
     codigo: 'BC001',
     nombre: 'Coilover BC Racing BR Series',
     descripcion: 'Sistema de suspensión ajustable para competición',
@@ -48,7 +48,7 @@ const PRODUCTOS_DATA: Producto[] = [
     ubicacion: 'Almacén A - Estante 1'
   },
   {
-    id: 2,
+    _id: 2,
     codigo: 'BC002',
     nombre: 'Pastillas de Freno BC Racing',
     descripcion: 'Pastillas de alto rendimiento para pista',
@@ -62,7 +62,7 @@ const PRODUCTOS_DATA: Producto[] = [
     ubicacion: 'Almacén B - Estante 2'
   },
   {
-    id: 3,
+    _id: 3,
     codigo: 'BC003',
     nombre: 'Kit Turbo BC Racing',
     descripcion: 'Kit completo de turbo para mayor potencia',
@@ -76,7 +76,7 @@ const PRODUCTOS_DATA: Producto[] = [
     ubicacion: 'Almacén A - Estante 5'
   },
   {
-    id: 4,
+    _id: 4,
     codigo: 'BC004',
     nombre: 'Barra Estabilizadora',
     descripcion: 'Barra anti-roll para mejor estabilidad',
@@ -90,7 +90,7 @@ const PRODUCTOS_DATA: Producto[] = [
     ubicacion: 'Almacén A - Estante 3'
   },
   {
-    id: 5,
+    _id: 5,
     codigo: 'BC005',
     nombre: 'Discos de Freno Deportivos',
     descripcion: 'Discos ventilados para mejor refrigeración',
@@ -239,7 +239,7 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
     }
 
     const newProduct: Producto = {
-      id: editingProduct ? editingProduct.id : Date.now(),
+      _id: editingProduct ? editingProduct._id : Date.now(),
       codigo: formData.codigo,
       nombre: formData.nombre,
       descripcion: formData.descripcion,
@@ -255,7 +255,7 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
 
     if (editingProduct) {
       // Editar producto existente
-      setProductos(productos.map(p => p.id === editingProduct.id ? newProduct : p));
+      setProductos(productos.map(p => p._id === editingProduct._id ? newProduct : p));
     } else {
       // Agregar nuevo producto
       setProductos([...productos, newProduct]);
