@@ -134,15 +134,15 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
   });
 
   const fetchProducts = async () => {
-      try {
-        const data = await productService.getAllProducts();
-        console.log('Productos cargados:', data);
-        setProductos(data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        Alert.alert('Error', 'No se pudieron cargar los productos');
-      }
-    };
+    try {
+      const data = await productService.getAllProducts();
+      console.log('Productos cargados:', data);
+      setProductos(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      Alert.alert('Error', 'No se pudieron cargar los productos');
+    }
+  };
 
   const fetchProductsByName = async (name: string) => {
     try {
@@ -167,9 +167,9 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-        fetchProductsByName(searchText);
+      fetchProductsByName(searchText);
     }
-    , 300); 
+      , 300);
     return () => clearTimeout(timer);
   }, [searchText]);
 
@@ -246,12 +246,11 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
     if (editingProduct) {
       // Editar producto existente
       setProductos(productos.map(p => p._id === editingProduct._id ? newProduct : p));
+      productService.updateProduct(editingProduct._id.toString(), newProduct);
     } else {
-      if (newProduct._id !== undefined && newProduct._id !== null) {
-        productService.updateProduct(newProduct._id.toString(), newProduct);
-      }
-      productService.getAllProducts().then(() => {
-        setProductos([...productos, newProduct]);
+      // Crear nuevo producto en el backend
+      productService.createProduct(newProduct as any).then((savedProduct) => {
+        setProductos([...productos, savedProduct]);
       }).catch((error) => {
         console.error('Error al agregar producto:', error);
         Alert.alert('Error', 'No se pudo agregar el producto');
@@ -282,7 +281,7 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
 
   const renderProductItem = ({ item }: { item: Producto }) => {
     const stockStatus = getStockStatus(item.stock_actual, item.stock_minimo);
-    
+
     return (
       <View style={styles.productCard}>
         <View style={styles.productHeader}>
@@ -293,10 +292,10 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        
+
         <Text style={styles.productName}>{item.nombre}</Text>
         <Text style={styles.productDescription}>{item.descripcion}</Text>
-        
+
         <View style={styles.productDetails}>
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>Categoría:</Text>
@@ -319,7 +318,7 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
             <Text style={styles.detailValue}>{item.ubicacion}</Text>
           </View>
         </View>
-        
+
         <View style={styles.actionButtons}>
           <TouchableOpacity
             style={[styles.actionBtn, styles.editBtn]}
@@ -347,8 +346,8 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
   };
 
   const renderFormField = (
-    label: string, 
-    key: keyof FormData, 
+    label: string,
+    key: keyof FormData,
     options: {
       required?: boolean;
       placeholder?: string;
@@ -374,17 +373,17 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#667eea" />
-      
+
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerContent}>
           <Link href={"/"} asChild>
             <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation?.goBack()}
-          >
-            <Text style={styles.backButtonText}>← Volver</Text>
-          </TouchableOpacity>
+              style={styles.backButton}
+              onPress={() => navigation?.goBack()}
+            >
+              <Text style={styles.backButtonText}>← Volver</Text>
+            </TouchableOpacity>
           </Link>
           <Text style={styles.headerTitle}>📦 PRODUCTOS</Text>
         </View>
@@ -439,12 +438,12 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
             <ScrollView style={styles.modalBody} showsVerticalScrollIndicator={false}>
               {renderFormField('Código', 'codigo', { required: true })}
               {renderFormField('Nombre', 'nombre', { required: true })}
-              {renderFormField('Descripción', 'descripcion', { 
-                multiline: true, 
+              {renderFormField('Descripción', 'descripcion', {
+                multiline: true,
                 numberOfLines: 3,
                 placeholder: 'Descripción detallada del producto'
               })}
-              
+
               <View style={styles.formGroup}>
                 <Text style={styles.formLabel}>Categoría *</Text>
                 <View style={styles.pickerContainer}>
@@ -469,24 +468,24 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
               </View>
 
               {renderFormField('Marca', 'marca', { required: true })}
-              {renderFormField('Precio Compra', 'precio_compra', { 
+              {renderFormField('Precio Compra', 'precio_compra', {
                 keyboardType: 'numeric',
-                required: true 
+                required: true
               })}
-              {renderFormField('Precio Venta', 'precio_venta', { 
+              {renderFormField('Precio Venta', 'precio_venta', {
                 keyboardType: 'numeric',
-                required: true 
+                required: true
               })}
-              {renderFormField('Stock Mínimo', 'stock_minimo', { 
+              {renderFormField('Stock Mínimo', 'stock_minimo', {
                 keyboardType: 'numeric',
-                required: true 
+                required: true
               })}
-              {renderFormField('Stock Actual', 'stock_actual', { 
+              {renderFormField('Stock Actual', 'stock_actual', {
                 keyboardType: 'numeric',
-                required: true 
+                required: true
               })}
-              {renderFormField('Ubicación', 'ubicacion', { 
-                placeholder: 'Ej: Almacén A - Estante 3' 
+              {renderFormField('Ubicación', 'ubicacion', {
+                placeholder: 'Ej: Almacén A - Estante 3'
               })}
 
               <View style={styles.modalActions}>
