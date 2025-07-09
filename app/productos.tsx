@@ -145,7 +145,7 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
     };
 
   const fetchProductsByName = async (name: string) => {
-    try{
+    try {
       if (name.trim() === '') {
         const allProducts = await productService.getAllProducts();
         console.log('Cargando todos los productos:', allProducts);
@@ -153,7 +153,11 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
       } else {
         const data = await productService.getProductsByName(name);
         console.log('Productos filtrados por nombre:', data);
-        setProductos(data);}
+        setProductos(data);
+      }
+    } catch (error) {
+      console.error('Error fetching products by name:', error);
+      Alert.alert('Error', 'No se pudieron filtrar los productos');
     }
   }
 
