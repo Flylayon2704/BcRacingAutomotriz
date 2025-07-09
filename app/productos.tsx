@@ -222,14 +222,12 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
   };
 
   const saveProduct = (): void => {
-    // Validaciones básicas
     if (!formData.codigo || !formData.nombre || !formData.categoria_id || !formData.marca) {
       Alert.alert('Error', 'Por favor completa todos los campos obligatorios');
       return;
     }
 
-    const newProduct: Producto = {
-      _id: editingProduct ? editingProduct._id : Date.now(),
+    const baseProduct = {
       codigo: formData.codigo,
       nombre: formData.nombre,
       descripcion: formData.descripcion,
@@ -240,26 +238,41 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
       precio_venta: parseFloat(formData.precio_venta) || 0,
       stock_minimo: parseInt(formData.stock_minimo) || 0,
       stock_actual: parseInt(formData.stock_actual) || 0,
-      ubicacion: formData.ubicacion
+      ubicacion: formData.ubicacion,
     };
 
     if (editingProduct) {
-      // Editar producto existente
-      setProductos(productos.map(p => p._id === editingProduct._id ? newProduct : p));
-      productService.updateProduct(editingProduct._id.toString(), newProduct);
-    } else {
-      console.log('Nuevo producto:', newProduct);
-      productService.createProduct(newProduct as any).then((savedProduct) => {
-        setProductos([...productos, savedProduct]);
-      }).catch((error) => {
-        console.error('Error al agregar producto:', error);
-        Alert.alert('Error', 'No se pudo agregar el producto');
-      });
-    }
+      // Agrega _id para la edición
+      const updatedProduct: Producto = {
+        _id: editingProduct._id,
+        ...baseProduct,
+      };
 
-    closeModal();
-    Alert.alert('Éxito', `Producto ${editingProduct ? 'actualizado' : 'agregado'} correctamente`);
+      productService.updateProduct(editingProduct._id.toString(), updatedProduct)
+        .then(() => {
+          setProductos(productos.map(p => p._id === editingProduct._id ? updatedProduct : p));
+          closeModal();
+          Alert.alert('Éxito', 'Producto actualizado correctamente');
+        })
+        .catch((error) => {
+          console.error('Error al actualizar producto:', error);
+          Alert.alert('Error', 'No se pudo actualizar el producto');
+        });
+    } else {
+      // Crear nuevo producto sin _id
+      productService.createProduct(baseProduct as any)
+        .then((savedProduct) => {
+          setProductos([...productos, savedProduct]);
+          closeModal();
+          Alert.alert('Éxito', 'Producto agregado correctamente');
+        })
+        .catch((error) => {
+          console.error('Error al agregar producto:', error);
+          Alert.alert('Error', 'No se pudo agregar el producto');
+        });
+    }
   };
+
 
   const deleteProduct = (id: number): void => {
     Alert.alert(
