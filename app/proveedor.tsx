@@ -92,7 +92,8 @@ const proveedor: React.FC = () => {
     }
 
     // Validar RUC único
-    const existingRuc = proveedores.find((p: { ruc: any; id: any; }) => p.ruc === formData.ruc && p.id !== editingId);
+    const existingRuc = proveedores.find((p: { ruc: any; _id: any; }) => p.ruc === formData.ruc && p._id !== editingId);
+
     if (existingRuc) {
       Alert.alert('Error', 'Ya existe un proveedor con este RUC');
       return false;
