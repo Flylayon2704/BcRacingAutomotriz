@@ -172,6 +172,73 @@ export const styles = StyleSheet.create({
     textShadowRadius: 2,
   },
 
+    // ESTILOS DEL PANEL DE ÉXITO - NUEVOS
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  successPanel: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 30,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    minWidth: 300,
+    maxWidth: '90%',
+  },
+  successIcon: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#4CAF50',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  checkmark: {
+    fontSize: 40,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  successTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  successMessage: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 25,
+    lineHeight: 22,
+  },
+  successButton: {
+    backgroundColor: '#6B73FF',
+    paddingHorizontal: 40,
+    paddingVertical: 12,
+    borderRadius: 25,
+    minWidth: 120,
+  },
+  successButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  // FIN ESTILOS DEL PANEL DE ÉXITO
+
+
   // Menu Styles
   menuHeader: {
     backgroundColor: '#6B73FF',

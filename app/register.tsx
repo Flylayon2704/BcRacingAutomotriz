@@ -8,7 +8,9 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
+    Modal,
+    Animated,
 } from 'react-native';
 import { styles } from './styles';
 
@@ -16,16 +18,58 @@ const register = () => {
 
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [fadeAnim] = useState(new Animated.Value(0));
+    const [scaleAnim] = useState(new Animated.Value(0.8));
     const authService = new AuthService();
+
+    const showSuccessPanel = () => {
+        setShowSuccessModal(true);
+
+        // Animaciones para el panel
+        Animated.parallel([
+            Animated.timing(fadeAnim, {
+                toValue: 1,
+                duration: 300,
+                useNativeDriver: true,
+            }),
+            Animated.spring(scaleAnim, {
+                toValue: 1,
+                tension: 100,
+                friction: 8,
+                useNativeDriver: true,
+            }),
+        ]).start();
+    };
+
+    const hideSuccessPanel = () => {
+        Animated.parallel([
+            Animated.timing(fadeAnim, {
+                toValue: 0,
+                duration: 200,
+                useNativeDriver: true,
+            }),
+            Animated.timing(scaleAnim, {
+                toValue: 0.8,
+                duration: 200,
+                useNativeDriver: true,
+            }),
+        ]).start(() => {
+            setShowSuccessModal(false);
+            // Resetear valores de animación para la próxima vez
+            fadeAnim.setValue(0);
+            scaleAnim.setValue(0.8);
+        });
+    };
 
     const handleRegister = async () => {
         try {
             const response = await authService.register(usuario, contrasena);
             console.log('Registro:', response);
             if (response.user) {
-                Alert.alert('Registro exitoso', 'Bienvenido a BC.RACING');
+                showSuccessPanel();
                 // Aquí puedes redirigir al usuario a la pantalla de inicio o login
-            }else{
+            } else {
                 Alert.alert('Error', 'No se pudo completar el registro. Inténtalo de nuevo.');
             }
         } catch (error) {
@@ -72,10 +116,46 @@ const register = () => {
                     />
 
                     <TouchableOpacity style={styles.loginButton} onPress={handleRegister}>
-                        <Text style={styles.loginButtonText}>Ingresar</Text>
+                        <Text style={styles.loginButtonText}>Registrar</Text>
                     </TouchableOpacity>
 
                 </View>
+                <Modal
+                    visible={showSuccessModal}
+                    transparent={true}
+                    animationType="none"
+                    onRequestClose={hideSuccessPanel}
+                >
+                    <View style={styles.modalOverlay}>
+                        <Animated.View
+                            style={[
+                                styles.successPanel,
+                                {
+                                    opacity: fadeAnim,
+                                    transform: [{ scale: scaleAnim }]
+                                }
+                            ]}
+                        >
+                            {/* Icono de éxito */}
+                            <View style={styles.successIcon}>
+                                <Text style={styles.checkmark}>✓</Text>
+                            </View>
+
+                            <Text style={styles.successTitle}>¡Registro Exitoso!</Text>
+                            <Text style={styles.successMessage}>
+                                Bienvenido a BC.RACING{'\n'}
+                                Tu cuenta ha sido creada correctamente
+                            </Text>
+
+                            <TouchableOpacity
+                                style={styles.successButton}
+                                onPress={hideSuccessPanel}
+                            >
+                                <Text style={styles.successButtonText}>Continuar</Text>
+                            </TouchableOpacity>
+                        </Animated.View>
+                    </View>
+                </Modal>
             </SafeAreaView>
         </ImageBackground>
     )
