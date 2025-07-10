@@ -1,6 +1,7 @@
 import { ProveedorData } from '@/interfaces/proveedor';
+import { ProveedorService } from '@/services/proveedorService';
 import { Link } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   FlatList,
@@ -21,7 +22,23 @@ const proveedor: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchText, setSearchText] = useState('');
+  const proveedorService = new ProveedorService();
   
+  const getProveedores = async () => {
+    try {
+      const data = await proveedorService.getAllProveedores();
+      setProveedores(data);
+    }
+    catch (error) {
+      console.error('Error fetching proveedores:', error);
+      Alert.alert('Error', 'No se pudieron cargar los proveedores');
+    }
+  }
+
+  useEffect(() => {
+    getProveedores();
+  }, []);
+
   const [formData, setFormData] = useState({
     nombre: '',
     contacto: '',
@@ -145,13 +162,6 @@ const proveedor: React.FC = () => {
     setModalVisible(true);
   };
 
-  const filteredProveedores = proveedores.filter(proveedor =>
-    proveedor.nombre.toLowerCase().includes(searchText.toLowerCase()) ||
-    proveedor.contacto.toLowerCase().includes(searchText.toLowerCase()) ||
-    proveedor.ruc.includes(searchText) ||
-    proveedor.email.toLowerCase().includes(searchText.toLowerCase())
-  );
-
   const renderProveedor = ({ item }: { item: ProveedorData }) => (
     <View style={styles.proveedorCard}>
       <View style={styles.proveedorHeader}>
@@ -234,7 +244,7 @@ const proveedor: React.FC = () => {
       </View>
 
       {/* Lista de Proveedores */}
-      {filteredProveedores.length === 0 ? (
+      {proveedores.length === 0 ? (
         <View style={styles.emptyState}>
           <Text style={styles.emptyStateTitle}>
             {searchText ? 'No se encontraron resultados' : 'No hay proveedores registrados'}
@@ -248,7 +258,7 @@ const proveedor: React.FC = () => {
         </View>
       ) : (
         <FlatList
-          data={filteredProveedores}
+          data={proveedores}
           renderItem={renderProveedor}
           keyExtractor={item => item.id}
           contentContainerStyle={styles.listContainer}
