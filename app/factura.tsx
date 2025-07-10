@@ -1,24 +1,18 @@
+import { Producto } from '@/interfaces/product';
+import { ProductService } from '@/services/productService';
 import { Link } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
   Alert,
-  Modal,
   FlatList,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-
-interface Producto {
-  id: number;
-  codigo: string;
-  nombre: string;
-  precio_venta: number;
-  stock_actual: number;
-}
 
 interface ItemBoleta {
   producto: Producto;
@@ -40,52 +34,30 @@ const factura: React.FC = () => {
     dni: '',
     direccion: '',
   });
+  const productsService = new ProductService(); 
   const [modalVisible, setModalVisible] = useState(false);
   const [numeroBoleta, setNumeroBoleta] = useState('0001-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0'));
+  const [products, setProducts] = useState<Producto[]>([]);
 
-  const productos: Producto[] = [
-    {
-      id: 1,
-      codigo: 'BRK001',
-      nombre: 'Pastillas de Freno Delanteras Toyota Corolla',
-      precio_venta: 75.00,
-      stock_actual: 25,
-    },
-    {
-      id: 2,
-      codigo: 'MOT001',
-      nombre: 'Filtro de Aceite Toyota',
-      precio_venta: 20.00,
-      stock_actual: 50,
-    },
-    {
-      id: 3,
-      codigo: 'SUS001',
-      nombre: 'Amortiguador Delantero Nissan Sentra',
-      precio_venta: 140.00,
-      stock_actual: 12,
-    },
-    {
-      id: 4,
-      codigo: 'TRA001',
-      nombre: 'Kit de Embrague Honda Civic',
-      precio_venta: 300.00,
-      stock_actual: 8,
-    },
-    {
-      id: 5,
-      codigo: 'ELE001',
-      nombre: 'Batería 12V 60Ah',
-      precio_venta: 200.00,
-      stock_actual: 15,
-    },
-  ];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await productsService.getAllProducts();
+        setProducts(response);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        Alert.alert('Error', 'No se pudieron cargar los productos');
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const agregarProducto = (producto: Producto) => {
-    const itemExistente = items.find(item => item.producto.id === producto.id);
+    const itemExistente = items.find(item => item.producto._id === producto._id);
     if (itemExistente) {
       setItems(items.map(item =>
-        item.producto.id === producto.id
+        item.producto._id === producto._id
           ? {
             ...item,
             cantidad: item.cantidad + 1,
@@ -107,12 +79,12 @@ const factura: React.FC = () => {
 
   const actualizarCantidad = (id: number, nuevaCantidad: number) => {
     if (nuevaCantidad <= 0) {
-      setItems(items.filter(item => item.producto.id !== id));
+      setItems(items.filter(item => item.producto._id !== id));
       return;
     }
 
     setItems(items.map(item =>
-      item.producto.id === id
+      item.producto._id === id
         ? {
           ...item,
           cantidad: nuevaCantidad,
@@ -230,14 +202,14 @@ const factura: React.FC = () => {
         </TouchableOpacity>
 
         {items.map(item => (
-          <View key={item.producto.id} style={styles.productoCard}>
+          <View key={item.producto._id} style={styles.productoCard}>
             <Text>{item.producto.nombre}</Text>
             <Text>Cant: {item.cantidad} | S/ {item.subtotal.toFixed(2)}</Text>
             <View style={{ flexDirection: 'row', gap: 10 }}>
-              <TouchableOpacity onPress={() => actualizarCantidad(item.producto.id, item.cantidad - 1)}>
+              <TouchableOpacity onPress={() => actualizarCantidad(item.producto._id || 0, item.cantidad - 1)}>
                 <Text>-</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => actualizarCantidad(item.producto.id, item.cantidad + 1)}>
+              <TouchableOpacity onPress={() => actualizarCantidad(item.producto._id || 0, item.cantidad + 1)}>
                 <Text>+</Text>
               </TouchableOpacity>
             </View>
@@ -261,8 +233,8 @@ const factura: React.FC = () => {
         <View style={{ flex: 1, padding: 16 }}>
           <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Seleccionar producto</Text>
           <FlatList
-            data={productos}
-            keyExtractor={(item) => item.id.toString()}
+            data={products}
+            keyExtractor={(item) => item._id?.toString() || ''}
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.productoCard}

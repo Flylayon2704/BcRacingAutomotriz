@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import { Picker } from '@react-native-picker/picker';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
   ActivityIndicator,
-  TextInput,
-  Modal,
+  Alert,
   FlatList,
+  Modal,
   SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { styles } from './stylesreport';
-import { Picker } from '@react-native-picker/picker';
 
 // Tipos basados en el esquema MongoDB
 interface Producto {
@@ -245,9 +243,9 @@ const report: React.FC = () => {
 
   const renderInventarioItem = ({ item }: { item: any }) => (
     <View style={styles.reportItem}>
-      <Text style={styles.itemCode}>{item.codigo}</Text>
-      <Text style={styles.itemName}>{item.nombre}</Text>
-      <Text style={styles.itemCategory}>{item.categoria.nombre}</Text>
+      <Text style={styles.itemCode}>{item.codigo || 'indefinido'}</Text>
+      <Text style={styles.itemName}>{item.nombre || 'indefinido'}</Text>
+      <Text style={styles.itemCategory}>{item.categoria.nombre  || 'indefinido'}</Text>
       <View style={styles.itemRow}>
         <Text style={styles.itemLabel}>Stock:</Text>
         <Text style={[
@@ -267,8 +265,8 @@ const report: React.FC = () => {
 
   const renderMovimientoItem = ({ item }: { item: MovimientoInventario }) => (
     <View style={styles.reportItem}>
-      <Text style={styles.itemCode}>{item.producto.codigo}</Text>
-      <Text style={styles.itemName}>{item.producto.nombre}</Text>
+      <Text style={styles.itemCode}>{item.producto.codigo || 'indefinido'}</Text>
+      <Text style={styles.itemName}>{item.producto.nombre  || 'indefinido'}</Text>
       <View style={styles.itemRow}>
         <Text style={styles.itemLabel}>Tipo:</Text>
         <Text style={[
@@ -288,7 +286,7 @@ const report: React.FC = () => {
           {item.stock_anterior} → {item.stock_nuevo}
         </Text>
       </View>
-      <Text style={styles.itemUser}>Usuario: {item.usuario.nombre}</Text>
+      <Text style={styles.itemUser}>Usuario: {item.usuario.nombre  || 'indefinido'}</Text>
       <Text style={styles.itemDate}>
         {new Date(item.fecha_movimiento).toLocaleDateString()}
       </Text>
@@ -298,7 +296,7 @@ const report: React.FC = () => {
   const renderVentaItem = ({ item }: { item: Factura }) => (
     <View style={styles.reportItem}>
       <Text style={styles.itemCode}>{item.numero_factura}</Text>
-      <Text style={styles.itemName}>{item.cliente.nombre}</Text>
+      <Text style={styles.itemName}>{item.cliente.nombre  || 'indefinido'}</Text>
       <Text style={styles.itemCategory}>RUC: {item.cliente.ruc}</Text>
       <View style={styles.itemRow}>
         <Text style={styles.itemLabel}>Total:</Text>
@@ -321,8 +319,8 @@ const report: React.FC = () => {
 
   const renderAlertaItem = ({ item }: { item: any }) => (
     <View style={[styles.reportItem, styles.alertItem]}>
-      <Text style={styles.itemCode}>{item.producto.codigo}</Text>
-      <Text style={styles.itemName}>{item.producto.nombre}</Text>
+      <Text style={styles.itemCode}>{item.producto.codigo || 'indefinido'}</Text>
+      <Text style={styles.itemName}>{item.producto.nombre  || 'indefinido'}</Text>
       <View style={styles.itemRow}>
         <Text style={styles.itemLabel}>Stock Actual:</Text>
         <Text style={styles.lowStock}>{item.stock_actual}</Text>
@@ -385,13 +383,6 @@ const report: React.FC = () => {
             <Picker.Item label="Alertas Stock" value="alertas" />
           </Picker>
         </View>
-
-        <TouchableOpacity 
-          style={styles.filterButton}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.filterButtonText}>Filtros</Text>
-        </TouchableOpacity>
 
         <TouchableOpacity 
           style={styles.generateButton}
