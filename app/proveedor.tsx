@@ -272,7 +272,6 @@ const proveedor: React.FC = () => {
           showsVerticalScrollIndicator={false}
         />
 
-      {/* Modal de Formulario */}
       <Modal
         animationType="slide"
         transparent={true}
