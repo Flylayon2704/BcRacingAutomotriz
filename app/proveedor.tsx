@@ -1,30 +1,20 @@
+import { ProveedorData } from '@/interfaces/proveedor';
+import { Link } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  View,
+  Alert,
+  FlatList,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  SafeAreaView,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
-  Alert,
-  Modal,
-  FlatList,
-  StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
+  View
 } from 'react-native';
-import { styles } from './stylesproveedor';
-import { Link } from 'expo-router';
-
-interface ProveedorData {
-  id: string;
-  nombre: string;
-  contacto: string;
-  telefono: string;
-  email: string;
-  direccion: string;
-  ruc: string;
-}
+import { styles } from './styleProveedor';
 
 const proveedor: React.FC = () => {
   const [proveedores, setProveedores] = useState<ProveedorData[]>([]);
