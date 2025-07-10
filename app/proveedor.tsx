@@ -40,6 +40,7 @@ const proveedor: React.FC = () => {
   }, []);
 
   const [formData, setFormData] = useState({
+    id: '',
     nombre: '',
     contacto: '',
     telefono: '',
@@ -50,6 +51,7 @@ const proveedor: React.FC = () => {
 
   const resetForm = () => {
     setFormData({
+      id: '',
       nombre: '',
       contacto: '',
       telefono: '',
@@ -141,6 +143,7 @@ const proveedor: React.FC = () => {
 
   const handleEdit = (proveedor: ProveedorData) => {
     setFormData({
+      id: proveedor._id || proveedor.id,
       nombre: proveedor.nombre,
       contacto: proveedor.contacto,
       telefono: proveedor.telefono,
@@ -148,7 +151,7 @@ const proveedor: React.FC = () => {
       direccion: proveedor.direccion,
       ruc: proveedor.ruc,
     });
-    setEditingId(proveedor._id);
+    setEditingId(proveedor._id || proveedor.id);
     setModalVisible(true);
   };
 
