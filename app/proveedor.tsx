@@ -23,7 +23,7 @@ const proveedor: React.FC = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchText, setSearchText] = useState('');
   const proveedorService = new ProveedorService();
-  
+
   const getProveedores = async () => {
     try {
       const data = await proveedorService.getAllProveedores();
@@ -83,7 +83,7 @@ const proveedor: React.FC = () => {
       Alert.alert('Error', 'El RUC debe tener 11 dígitos');
       return false;
     }
-    
+
     // Validar email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
@@ -92,7 +92,7 @@ const proveedor: React.FC = () => {
     }
 
     // Validar RUC único
-    const existingRuc = proveedores.find((p: { ruc: any; _id: any; }) => p.ruc === formData.ruc && p._id !== editingId);
+    const existingRuc = proveedores.find(p => p.ruc === formData.ruc && p._id !== editingId);
 
     if (existingRuc) {
       Alert.alert('Error', 'Ya existe un proveedor con este RUC');
@@ -115,10 +115,10 @@ const proveedor: React.FC = () => {
 
         const response = await proveedorService.updateProveedor(editingId, updatedProveedor);
         console.log('Proveedor actualizado:', response);
-        
+
         const newProvee = await proveedorService.getAllProveedores(); // Actualizar la lista de proveedores
         setProveedores(newProvee)
-        
+
 
         Alert.alert('Éxito', 'Proveedor actualizado correctamente');
       } else {
@@ -185,27 +185,27 @@ const proveedor: React.FC = () => {
         <Text style={styles.proveedorNombre}>{item.nombre}</Text>
         <Text style={styles.proveedorRuc}>RUC: {item.ruc}</Text>
       </View>
-      
+
       <View style={styles.proveedorInfo}>
         <Text style={styles.infoLabel}>Contacto:</Text>
         <Text style={styles.infoValue}>{item.contacto}</Text>
       </View>
-      
+
       <View style={styles.proveedorInfo}>
         <Text style={styles.infoLabel}>Teléfono:</Text>
         <Text style={styles.infoValue}>{item.telefono}</Text>
       </View>
-      
+
       <View style={styles.proveedorInfo}>
         <Text style={styles.infoLabel}>Email:</Text>
         <Text style={styles.infoValue}>{item.email}</Text>
       </View>
-      
+
       <View style={styles.proveedorInfo}>
         <Text style={styles.infoLabel}>Dirección:</Text>
         <Text style={styles.infoValue}>{item.direccion}</Text>
       </View>
-      
+
       <View style={styles.actionButtons}>
         <TouchableOpacity
           style={[styles.actionButton, styles.editButton]}
@@ -213,7 +213,7 @@ const proveedor: React.FC = () => {
         >
           <Text style={styles.actionButtonText}>Editar</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={[styles.actionButton, styles.deleteButton]}
           onPress={() => handleDelete(item.id)}
@@ -228,13 +228,13 @@ const proveedor: React.FC = () => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-            <Link href={"/"} asChild>
-                <TouchableOpacity
-                style={styles.backButton}
-                >
+        <Link href={"/"} asChild>
+          <TouchableOpacity
+            style={styles.backButton}
+          >
             <Text style={styles.backButtonText}>← Volver</Text>
-            </TouchableOpacity>
-            </Link>
+          </TouchableOpacity>
+        </Link>
         <Text style={styles.headerTitle}>🏁 BC Racing Automotriz</Text>
         <Text style={styles.headerSubtitle}>Gestión de Proveedores</Text>
       </View>
@@ -267,7 +267,7 @@ const proveedor: React.FC = () => {
             {searchText ? 'No se encontraron resultados' : 'No hay proveedores registrados'}
           </Text>
           <Text style={styles.emptyStateSubtitle}>
-            {searchText 
+            {searchText
               ? `No hay proveedores que coincidan con "${searchText}"`
               : 'Comience agregando su primer proveedor'
             }
@@ -377,7 +377,7 @@ const proveedor: React.FC = () => {
                   >
                     <Text style={styles.modalButtonText}>Cancelar</Text>
                   </TouchableOpacity>
-                  
+
                   <TouchableOpacity
                     style={[styles.modalButton, styles.submitButton]}
                     onPress={handleSubmit}
