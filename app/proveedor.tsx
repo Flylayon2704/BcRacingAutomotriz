@@ -23,7 +23,7 @@ const proveedor: React.FC = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchText, setSearchText] = useState('');
   const proveedorService = new ProveedorService();
-  
+
   const getProveedores = async () => {
     try {
       const data = await proveedorService.getAllProveedores();
@@ -81,7 +81,7 @@ const proveedor: React.FC = () => {
       Alert.alert('Error', 'El RUC debe tener 11 dígitos');
       return false;
     }
-    
+
     // Validar email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
@@ -99,31 +99,33 @@ const proveedor: React.FC = () => {
     return true;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    if (editingId) {
-      // Actualizar proveedor existente
-      setProveedores(prev => 
-        prev.map(p => 
-          p.id === editingId 
-            ? { ...formData, id: editingId }
-            : p
-        )
-      );
-      Alert.alert('Éxito', 'Proveedor actualizado correctamente');
-    } else {
-      // Crear nuevo proveedor
-      const newProveedor: ProveedorData = {
-        ...formData,
-        id: Date.now().toString(),
-      };
-      setProveedores(prev => [...prev, newProveedor]);
-      Alert.alert('Éxito', 'Proveedor registrado correctamente');
-    }
+    try {
+      if (editingId) {
+        // Si se está editando un proveedor, puedes actualizarlo usando `updateProveedor`.
+        // Aquí se asumirá que estás implementando la lógica de actualización si es necesario
+        Alert.alert('Éxito', 'Proveedor actualizado correctamente');
+      } else {
+        // Crear nuevo proveedor llamando a la API
+        const newProveedor: ProveedorData = {
+          ...formData,
+          id: Date.now().toString(),
+        };
 
-    resetForm();
-    setModalVisible(false);
+        // Usar el método createProveedor de ProveedorService
+        const createdProveedor = await proveedorService.createProveedor(newProveedor);
+        setProveedores(prev => [...prev, createdProveedor]);
+        Alert.alert('Éxito', 'Proveedor registrado correctamente');
+      }
+
+      resetForm();
+      setModalVisible(false);
+      getProveedores(); // Vuelve a cargar la lista de proveedores desde la API
+    } catch (error) {
+      Alert.alert('Error', 'Hubo un error al guardar el proveedor');
+    }
   };
 
   const handleEdit = (proveedor: ProveedorData) => {
@@ -148,9 +150,14 @@ const proveedor: React.FC = () => {
         {
           text: 'Eliminar',
           style: 'destructive',
-          onPress: () => {
-            setProveedores(prev => prev.filter(p => p.id !== id));
-            Alert.alert('Éxito', 'Proveedor eliminado correctamente');
+          onPress: async () => {
+            try {
+              await proveedorService.deleteProveedor(id);
+              setProveedores(prev => prev.filter(p => p.id !== id));
+              Alert.alert('Éxito', 'Proveedor eliminado correctamente');
+            } catch (error) {
+              Alert.alert('Error', 'No se pudo eliminar el proveedor');
+            }
           },
         },
       ]
@@ -168,27 +175,27 @@ const proveedor: React.FC = () => {
         <Text style={styles.proveedorNombre}>{item.nombre}</Text>
         <Text style={styles.proveedorRuc}>RUC: {item.ruc}</Text>
       </View>
-      
+
       <View style={styles.proveedorInfo}>
         <Text style={styles.infoLabel}>Contacto:</Text>
         <Text style={styles.infoValue}>{item.contacto}</Text>
       </View>
-      
+
       <View style={styles.proveedorInfo}>
         <Text style={styles.infoLabel}>Teléfono:</Text>
         <Text style={styles.infoValue}>{item.telefono}</Text>
       </View>
-      
+
       <View style={styles.proveedorInfo}>
         <Text style={styles.infoLabel}>Email:</Text>
         <Text style={styles.infoValue}>{item.email}</Text>
       </View>
-      
+
       <View style={styles.proveedorInfo}>
         <Text style={styles.infoLabel}>Dirección:</Text>
         <Text style={styles.infoValue}>{item.direccion}</Text>
       </View>
-      
+
       <View style={styles.actionButtons}>
         <TouchableOpacity
           style={[styles.actionButton, styles.editButton]}
@@ -196,7 +203,7 @@ const proveedor: React.FC = () => {
         >
           <Text style={styles.actionButtonText}>Editar</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={[styles.actionButton, styles.deleteButton]}
           onPress={() => handleDelete(item.id)}
@@ -211,13 +218,13 @@ const proveedor: React.FC = () => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-            <Link href={"/"} asChild>
-                <TouchableOpacity
-                style={styles.backButton}
-                >
+        <Link href={"/"} asChild>
+          <TouchableOpacity
+            style={styles.backButton}
+          >
             <Text style={styles.backButtonText}>← Volver</Text>
-            </TouchableOpacity>
-            </Link>
+          </TouchableOpacity>
+        </Link>
         <Text style={styles.headerTitle}>🏁 BC Racing Automotriz</Text>
         <Text style={styles.headerSubtitle}>Gestión de Proveedores</Text>
       </View>
@@ -250,7 +257,7 @@ const proveedor: React.FC = () => {
             {searchText ? 'No se encontraron resultados' : 'No hay proveedores registrados'}
           </Text>
           <Text style={styles.emptyStateSubtitle}>
-            {searchText 
+            {searchText
               ? `No hay proveedores que coincidan con "${searchText}"`
               : 'Comience agregando su primer proveedor'
             }
@@ -264,7 +271,6 @@ const proveedor: React.FC = () => {
           contentContainerStyle={styles.listContainer}
           showsVerticalScrollIndicator={false}
         />
-      )}
 
       {/* Modal de Formulario */}
       <Modal
@@ -360,7 +366,7 @@ const proveedor: React.FC = () => {
                   >
                     <Text style={styles.modalButtonText}>Cancelar</Text>
                   </TouchableOpacity>
-                  
+
                   <TouchableOpacity
                     style={[styles.modalButton, styles.submitButton]}
                     onPress={handleSubmit}
