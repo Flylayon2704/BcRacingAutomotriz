@@ -137,7 +137,7 @@ const proveedor: React.FC = () => {
       direccion: proveedor.direccion,
       ruc: proveedor.ruc,
     });
-    setEditingId(proveedor.id);
+    setEditingId(proveedor._id);
     setModalVisible(true);
   };
 
