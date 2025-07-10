@@ -229,7 +229,7 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
     }
 
     const newProduct: Producto = {
-      _id: editingProduct ? editingProduct._id : Date.now(),
+      _id: editingProduct ? editingProduct._id : undefined,
       codigo: formData.codigo,
       nombre: formData.nombre,
       descripcion: formData.descripcion,
@@ -243,12 +243,14 @@ const productos: React.FC<ProductosProps> = ({ navigation }) => {
       ubicacion: formData.ubicacion
     };
 
+    if (!editingProduct) {
+      delete newProduct._id;
+    }
+
     if (editingProduct) {
-      // Editar producto existente
       setProductos(productos.map(p => p._id === editingProduct._id ? newProduct : p));
       productService.updateProduct(editingProduct._id!.toString(), newProduct);
     } else {
-      // Crear nuevo producto en el backend
       productService.createProduct(newProduct as any).then((savedProduct) => {
         setProductos([...productos, savedProduct]);
       }).catch((error) => {
