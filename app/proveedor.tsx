@@ -111,9 +111,11 @@ const proveedor: React.FC = () => {
         };
 
         const response = await proveedorService.updateProveedor(editingId, updatedProveedor);
-        setProveedores((prev: any[]) => 
-          prev.map((p: { _id: string; }) => (p._id === editingId ? response : p))
-        );
+        console.log('Proveedor actualizado:', response);
+        
+        const newProvee = await proveedorService.getAllProveedores(); // Actualizar la lista de proveedores
+        setProveedores(newProvee)
+        
 
         Alert.alert('Éxito', 'Proveedor actualizado correctamente');
       } else {
