@@ -145,10 +145,10 @@ const factura: React.FC = () => {
     const fecha = new Date().toLocaleDateString('es-PE');
 
     let resumen = `🧾 BOLETA DE VENTA\n\n`;
-    resumen += `BODEGA MIRIAM\n`;
-    resumen += `LIMA - LIMA\n`;
-    resumen += `Tel: 987654321\n`;
-    resumen += `R.U.C. N° 10106192281\n`;
+    resumen += `BODEGA BcRacing\n`;
+    resumen += `COMAS - COMAS\n`;
+    resumen += `Tel: 9997788\n`;
+    resumen += `R.U.C. N° 12345678911\n`;
     resumen += `N° ${numeroBoleta}\n\n`;
 
     resumen += `Cliente: ${cliente.nombre}\n`;
