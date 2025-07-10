@@ -104,8 +104,17 @@ const proveedor: React.FC = () => {
 
     try {
       if (editingId) {
-        // Si se está editando un proveedor, puedes actualizarlo usando `updateProveedor`.
-        // Aquí se asumirá que estás implementando la lógica de actualización si es necesario
+        // Actualizar proveedor llamando a la API
+        const updatedProveedor: ProveedorData = {
+          ...formData,
+          _id: editingId, // Mantener el mismo ID
+        };
+
+        const response = await proveedorService.updateProveedor(editingId, updatedProveedor);
+        setProveedores((prev: any[]) => 
+          prev.map((p: { _id: string; }) => (p._id === editingId ? response : p))
+        );
+
         Alert.alert('Éxito', 'Proveedor actualizado correctamente');
       } else {
         // Crear nuevo proveedor llamando a la API
