@@ -260,7 +260,7 @@ const proveedor: React.FC = () => {
         <FlatList
           data={proveedores}
           renderItem={renderProveedor}
-          keyExtractor={item => item._id}
+          keyExtractor={item => item._id || item.id}
           contentContainerStyle={styles.listContainer}
           showsVerticalScrollIndicator={false}
         />
